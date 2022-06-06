@@ -18,9 +18,13 @@ const io = new Server(server, {
 io.on('connection', (socket) => {
     console.log(socket.id);
 
+    socket.on('join_room', (data) => {
+        socket.join(data.room);
+        socket.to(data.room).emit('on_join_room', `${data.name} tham gia cuộc trò chuyện`);
+    });
+
     socket.on('send_message', (data) => {
-        console.log(data);
-        socket.broadcast.emit('recive_message', data);
+        socket.to(data.room).emit('recive_message', data);
     });
 });
 
